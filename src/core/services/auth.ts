@@ -11,6 +11,7 @@ export class AuthService {
   session = signal<Session | null>(null);
   loading = signal<boolean>(false);
   initialized = signal<boolean>(false);
+  supabase: any;
 
   constructor(private router: Router) {
     this.loadSession();
@@ -104,5 +105,15 @@ export class AuthService {
 
   isAuthenticated(): boolean {
     return !!this.user();
+  }
+
+   async getProducts () {
+    const { data: products, error } = await this.supabase
+      .from('products')
+      .select('*')
+    if (error) {
+      throw new Error( 'Error' + error.message);
+    }
+    return products;
   }
 }

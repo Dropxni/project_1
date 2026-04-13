@@ -1,43 +1,136 @@
-<div class="min-h-screen bg-gray-100 px-4 py-8">
-  <div class="mx-auto max-w-4xl">
-    <div class="rounded-2xl bg-white p-6 shadow-lg">
-      <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 class="text-2xl font-bold text-gray-800">Home</h1>
-          <p class="mt-1 text-sm text-gray-500">
-            Bienvenido a tu área privada
+<div class="min-h-screen bg-slate-50">
+
+  <header class="border-b border-slate-200 bg-white/90 backdrop-blur">
+    <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-5">
+      
+      <div>
+        <h1 class="text-2xl font-semibold tracking-tight text-slate-900">
+          Gestión de productos
+        </h1>
+        <p class="mt-1 text-sm text-slate-500">
+          Administra tu catálogo de forma clara y profesional
+        </p>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <div class="hidden text-right sm:block">
+          <p class="text-sm font-medium text-slate-700">
+            {{ user()?.email || 'Usuario' }}
           </p>
+          <p class="text-xs text-slate-400">Sesión activa</p>
         </div>
 
         <button
           type="button"
           (click)="onLogout()"
-          class="rounded-xl bg-red-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-700"
+          class="rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100"
         >
           Cerrar sesión
         </button>
       </div>
 
-      <div class="mt-6 rounded-2xl border border-gray-200 bg-gray-50 p-5">
-        <h2 class="text-lg font-semibold text-gray-800">Información del usuario</h2>
-
-        <div class="mt-4 space-y-2 text-sm text-gray-700">
-          <p>
-            <span class="font-medium">Email:</span>
-            {{ user()?.email || 'No disponible' }}
-          </p>
-
-          <p>
-            <span class="font-medium">ID:</span>
-            {{ user()?.id || 'No disponible' }}
-          </p>
-
-          <p>
-            <span class="font-medium">Último acceso:</span>
-            {{ user()?.last_sign_in_at || 'No disponible' }}
-          </p>
-        </div>
-      </div>
     </div>
-  </div>
+  </header>
+
+  <main class="mx-auto max-w-7xl px-6 py-8">
+
+    <section class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      
+      <div>
+        <h2 class="text-xl font-semibold text-slate-900">Inventario</h2>
+        <p class="mt-1 text-sm text-slate-500">
+          Visualiza y organiza los productos disponibles en tu sistema
+        </p>
+      </div>
+
+      <button
+        type="button"
+        (click)="onNewProduct()"
+        class="inline-flex items-center justify-center rounded-2xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800"
+      >
+        Nuevo producto
+      </button>
+
+    </section>
+
+    <section class="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
+      <div class="overflow-x-auto">
+
+        <table class="min-w-full divide-y divide-slate-200">
+
+          <thead class="bg-slate-50">
+            <tr>
+              <th class="px-6 py-4 text-xs font-semibold uppercase text-slate-500">Imagen</th>
+              <th class="px-6 py-4 text-xs font-semibold uppercase text-slate-500">Nombre</th>
+              <th class="px-6 py-4 text-xs font-semibold uppercase text-slate-500">Descripción</th>
+              <th class="px-6 py-4 text-xs font-semibold uppercase text-slate-500">Precio</th>
+              <th class="px-6 py-4 text-xs font-semibold uppercase text-slate-500">Precio salida</th>
+              <th class="px-6 py-4 text-xs font-semibold uppercase text-slate-500">Stock</th>
+              <th class="px-6 py-4 text-xs font-semibold uppercase text-slate-500">Categoría</th>
+              <th class="px-6 py-4 text-xs font-semibold uppercase text-slate-500">Color</th>
+            </tr>
+          </thead>
+
+          
+          <tbody class="divide-y divide-slate-100 bg-white">
+
+            @for (product of products(); track product.id) {
+              <tr class="transition hover:bg-slate-50/80">
+
+                <td class="px-6 py-4">
+                  <img
+                    [src]="product.imagen"
+                    [alt]="product.nombre"
+                    class="h-14 w-14 rounded-2xl object-cover ring-1 ring-slate-200"
+                  />
+                </td>
+
+                <td class="px-6 py-4">
+                  <p class="font-medium text-slate-900">
+                    {{ product.nombre }}
+                  </p>
+                </td>
+
+                <td class="px-6 py-4 max-w-xs">
+                  <p class="line-clamp-2 text-sm text-slate-600">
+                    {{ product.descripcion }}
+                  </p>
+                </td>
+
+                <td class="px-6 py-4 text-sm font-medium text-slate-800">
+                  ${{ product.precio }}
+                </td>
+
+                <td class="px-6 py-4 text-sm text-slate-400 line-through">
+                  ${{ product.precioSalida }}
+                </td>
+
+                <td class="px-6 py-4">
+                  <span class="inline-flex rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700 ring-1 ring-emerald-200">
+                    {{ product.stock }} unidades
+                  </span>
+                </td>
+
+                <td class="px-6 py-4 text-sm text-slate-700">
+                  {{ product.categoria }}
+                </td>
+
+                <td class="px-6 py-4">
+                  <span class="inline-flex rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-700 ring-1 ring-slate-200">
+                    {{ product.colorConserve }}
+                  </span>
+                </td>
+
+              </tr>
+            }
+
+          </tbody>
+        </table>
+
+      </div>
+    </section>
+
+  </main>
 </div>
+
+<app-dialog></app-dialog>
